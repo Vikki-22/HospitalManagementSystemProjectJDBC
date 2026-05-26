@@ -60,8 +60,8 @@ public class Appointments {
 		return "Appointments [appointment_id=" + appointment_id + ", patient_id=" + patient_id + ", doctor_id="
 				+ doctor_id + ", appointment_time=" + appointment_time + ", reason=" + reason + "]";
 	}
-	
-	
-	
-	
+	public Appointments() {
+		super();
+		// TODO Auto-generated constructor stub
+	}		
 }

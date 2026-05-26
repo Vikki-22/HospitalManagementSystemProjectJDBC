@@ -1,48 +1,64 @@
 package View;
 
+import java.sql.Timestamp;
 import java.util.Scanner;
 
 public class AppointmentsView {
-	
-	
-	private Scanner sc=new Scanner(System.in);
-	public int ShowMenu()
-    {
-        System.out.println("-----------Appointments View----------");
-        System.out.println("Enter 1 : for add Appointments");
-        System.out.println("Enter 2 : for delete Appointments");
-        System.out.println("Enter 3 : for view Appointments");
-        System.out.println("Enter 4 : for update Appointments Details ");
-        System.out.println("Enter 5 : for exit..");
-    	System.out.println("Enter the choice :");
-    	int i=sc.nextInt();
-    	
-    	return i;
-    }  
-    
+
+    private Scanner sc = new Scanner(System.in);
+
+    // Menu
+    public int showMenu() {
+
+        System.out.println("\n----------- Appointments Menu ----------");
+
+        System.out.println("Enter 1 : Add Appointment");
+        System.out.println("Enter 2 : Delete Appointment");
+        System.out.println("Enter 3 : View Appointment");
+        System.out.println("Enter 4 : Update Appointment");
+        System.out.println("Enter 5 : Exit");
+
+        System.out.print("Enter Your Choice : ");
+
+        return sc.nextInt();
+    }
+
+    // Appointment Id
     public int getAppointmentId() {
-    	sc.nextLine();
-    	System.out.println(" enter the Appointmentid ...");
-    	return sc.nextInt();
+
+        System.out.print("Enter Appointment Id : ");
+        return sc.nextInt();
     }
-    
-    public int getAppointmentPatientId() {
-    	sc.nextLine();
-    	System.out.println(" enter the AppointmentPatientid...");
-    	return sc.nextInt();
+
+    // Patient Id
+    public int getPatientId() {
+
+        System.out.print("Enter Patient Id : ");
+        return sc.nextInt();
     }
-    
-    public int getAppointmentDoctorId() {
-    	sc.nextLine();
-    	System.out.println(" enter the appointment docror id...");
-    	return sc.nextInt();
+
+    // Doctor Id
+    public int getDoctorId() {
+
+        System.out.print("Enter Doctor Id : ");
+        return sc.nextInt();
     }
-    
-    
-    public String getAppointmentsReason() {
-    	sc.nextLine();
-    	System.out.println(" enter the reason of appointment...");
-    	return sc.nextLine();
-    	
+
+    // Appointment Time
+    public Timestamp getAppointmentTime() {
+
+        sc.nextLine();
+
+        System.out.print("Enter Appointment Time (yyyy-mm-dd hh:mm:ss) : ");
+
+        return Timestamp.valueOf(sc.nextLine());
+    }
+
+    // Reason
+    public String getAppointmentReason() {
+
+        System.out.print("Enter Appointment Reason : ");
+
+        return sc.nextLine();
     }
 }

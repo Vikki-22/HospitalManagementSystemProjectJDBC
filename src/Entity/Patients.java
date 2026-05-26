@@ -109,6 +109,13 @@ public class Patients {
 				+ "]";
 	}
 	
+	public Patients() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+	
 	
 	
 

@@ -1,97 +1,189 @@
 package ModelDao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import Entity.Departments;
+
 import Entity.Patients;
 
 public class PatientsDao {
-	
-	// Add Patient
-	public int AddPatient(Patients p) {
-		int i=0;
-		
-		try {
-			Connection con =DBUtil.makeConnection();
-			PreparedStatement pst= con.prepareStatement
-			("insert into patients(first_name,last_name,gender,"
-					+ "phone,email,addredd,bloud_group) values(?,?,?,?,?,?,?)");
-			pst.setString(1, p.getFirst_name());
-			pst.setString(2, p.getLast_name());
-			pst.setString(3, p.getGender());
-			pst.setString(4, p.getPhone());
-			pst.setString(5, p.getEmail());
-			pst.setString(6, p.getAddress());
-			pst.setString(7, p.getBlood_group());
-			pst.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return i;
-	}
-	// Remove Patient
-	public int removePatient(Patients p) {
-		int i=0;
-		
-		try {
-			Connection con =DBUtil.makeConnection();
-			PreparedStatement pst= con.prepareStatement("remove from patients where department_id=?");
-			pst.setInt(1, p.getPatient_id());
-			pst.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return i;
-	}
-	// update Patient
-	public int UpdatePatient(Patients p) {
-		int i=0;
-		
-		try {
-			Connection con =DBUtil.makeConnection();
-			PreparedStatement pst= con.prepareStatement("update patients set first_name=?,last_name=?,gender=?,phone=?,email=?,addredd=?,bloud_group=?) where department_id=?");
-			pst.setString(1, p.getFirst_name());
-			pst.setString(2, p.getLast_name());
-			pst.setString(3, p.getGender());
-			pst.setString(4, p.getPhone());
-			pst.setString(5, p.getEmail());
-			pst.setString(6, p.getAddress());
-			pst.setString(7, p.getBlood_group());
-			pst.setInt(8, p.getPatient_id());
-			pst.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return i;
-	}
-	// view Patient
-	public List viewDepartment() {
-		ArrayList<Patients> list=new ArrayList<Patients>();
-		
-		try {
-			Connection con =DBUtil.makeConnection();
-			PreparedStatement pst= con.prepareStatement("select * from patients");
-			ResultSet rs=pst.executeQuery();
-			while(rs.next()){
-				Patients p= new Patients(rs.getInt("patient_id"), rs.getString("firest_name"),rs.getString("last_name"), rs.getString("gender"), rs.getString("phone"), null, null, null, null, null)						
-			    list.add(d);
-			}
-			
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return list;
-		
-	}
 
+    // Add Patient
+    public boolean addPatient(Patients p) {
+
+        try {
+            Connection con = DBUtil.makeConnection();
+
+            String query = "insert into patients(first_name,last_name,gender,date_of_birth,phone,email,address,blood_group,registration_date) values(?,?,?,?,?,?,?,?,?)";
+
+            PreparedStatement pst = con.prepareStatement(query);
+
+            pst.setString(1, p.getFirst_name());
+            pst.setString(2, p.getLast_name());
+            pst.setString(3, p.getGender());
+
+            pst.setDate(4, new Date(p.getDate_of_birth().getTime()));
+
+            pst.setString(5, p.getPhone());
+            pst.setString(6, p.getEmail());
+            pst.setString(7, p.getAddress());
+            pst.setString(8, p.getBlood_group());
+
+            pst.setDate(9, new Date(p.getRegistration_date().getTime()));
+
+            int i = pst.executeUpdate();
+
+            if (i > 0) {
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // View All Patients
+    public List<Patients> viewAllPatients() {
+
+        List<Patients> list = new ArrayList<>();
+
+        try {
+            Connection con = DBUtil.makeConnection();
+
+            String query = "select * from patients";
+
+            PreparedStatement pst = con.prepareStatement(query);
+
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+
+                Patients p = new Patients(
+                        rs.getInt("patient_id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("gender"),
+                        rs.getDate("date_of_birth"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getString("address"),
+                        rs.getString("blood_group"),
+                        rs.getDate("registration_date"));
+
+                list.add(p);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // View Patient By Id
+    public Patients viewPatientById(int id) {
+
+        Patients p = null;
+
+        try {
+            Connection con = DBUtil.makeConnection();
+
+            String query = "select * from patients where patient_id=?";
+
+            PreparedStatement pst = con.prepareStatement(query);
+
+            pst.setInt(1, id);
+
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+
+                p = new Patients(
+                        rs.getInt("patient_id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("gender"),
+                        rs.getDate("date_of_birth"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getString("address"),
+                        rs.getString("blood_group"),
+                        rs.getDate("registration_date"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return p;
+    }
+
+    // Delete Patient
+    public boolean deletePatient(int id) {
+
+        try {
+            Connection con = DBUtil.makeConnection();
+
+            String query = "delete from patients where patient_id=?";
+
+            PreparedStatement pst = con.prepareStatement(query);
+
+            pst.setInt(1, id);
+
+            int i = pst.executeUpdate();
+
+            if (i > 0) {
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // Update Patient
+    public boolean updatePatient(Patients p) {
+
+        try {
+            Connection con = DBUtil.makeConnection();
+
+            String query = "update patients set first_name=?,last_name=?,gender=?,date_of_birth=?,phone=?,email=?,address=?,blood_group=?,registration_date=? where patient_id=?";
+
+            PreparedStatement pst = con.prepareStatement(query);
+
+            pst.setString(1, p.getFirst_name());
+            pst.setString(2, p.getLast_name());
+            pst.setString(3, p.getGender());
+
+            pst.setDate(4, new Date(p.getDate_of_birth().getTime()));
+
+            pst.setString(5, p.getPhone());
+            pst.setString(6, p.getEmail());
+            pst.setString(7, p.getAddress());
+            pst.setString(8, p.getBlood_group());
+
+            pst.setDate(9, new Date(p.getRegistration_date().getTime()));
+
+            pst.setInt(10, p.getPatient_id());
+
+            int i = pst.executeUpdate();
+
+            if (i > 0) {
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }

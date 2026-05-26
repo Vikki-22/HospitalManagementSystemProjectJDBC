@@ -68,6 +68,10 @@ public class Bills {
 		return "Bills [bill_id=" + bill_id + ", patient_id=" + patient_id + ", appointment_id=" + appointment_id
 				+ ", Total_amount=" + Total_amount + ", status=" + status + ", bill_date=" + bill_date + "]";
 	}
+	public Bills() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	
 	
 	

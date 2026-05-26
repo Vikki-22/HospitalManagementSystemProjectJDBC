@@ -1,0 +1,222 @@
+package ModelDao;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import Entity.Appointments;
+import Entity.Doctors;
+import Entity.Patients;
+
+public class AppointmentsDao {
+
+    // Add Appointment
+    public int addAppointment(Appointments a) {
+
+        int i = 0;
+
+        try {
+
+            Connection con = DBUtil.makeConnection();
+
+            String query =
+            "insert into appointments(patient_id,doctor_id,appointment_date,reason) values(?,?,?,?)";
+
+            PreparedStatement pst =
+                    con.prepareStatement(query);
+
+            pst.setInt(1,
+                    a.getPatient_id().getPatient_id());
+
+            pst.setInt(2,
+                    a.getDoctor_id().getDoctor_id());
+
+            pst.setTimestamp(3,
+                    new Timestamp(
+                    a.getAppointment_time().getTime()));
+
+            pst.setString(4,
+                    a.getReason());
+
+            i = pst.executeUpdate();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return i;
+    }
+
+    // Delete Appointment
+    public int deleteAppointment(int appointmentId) {
+
+        int i = 0;
+
+        try {
+
+            Connection con = DBUtil.makeConnection();
+
+            String query =
+            "delete from appointments where appointment_id=?";
+
+            PreparedStatement pst =
+                    con.prepareStatement(query);
+
+            pst.setInt(1, appointmentId);
+
+            i = pst.executeUpdate();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return i;
+    }
+
+    // Update Appointment
+    public int updateAppointment(Appointments a) {
+
+        int i = 0;
+
+        try {
+
+            Connection con = DBUtil.makeConnection();
+
+            String query =
+            "update appointments set patient_id=?,doctor_id=?,appointment_date=?,reason=? where appointment_id=?";
+
+            PreparedStatement pst =
+                    con.prepareStatement(query);
+
+            pst.setInt(1,
+                    a.getPatient_id().getPatient_id());
+
+            pst.setInt(2,
+                    a.getDoctor_id().getDoctor_id());
+
+            pst.setTimestamp(3,
+                    new Timestamp(
+                    a.getAppointment_time().getTime()));
+
+            pst.setString(4,
+                    a.getReason());
+
+            pst.setInt(5,
+                    a.getAppointment_id());
+
+            i = pst.executeUpdate();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return i;
+    }
+
+    // View All Appointments
+    public List<Appointments> viewAllAppointments() {
+
+        List<Appointments> list =
+                new ArrayList<>();
+
+        try {
+
+            Connection con = DBUtil.makeConnection();
+
+            String query =
+                    "select * from appointments";
+
+            PreparedStatement pst =
+                    con.prepareStatement(query);
+
+            ResultSet rs =
+                    pst.executeQuery();
+
+            while (rs.next()) {
+
+                Patients p = new Patients();
+
+                p.setPatient_id(
+                        rs.getInt("patient_id"));
+
+                Doctors d = new Doctors();
+
+                d.setDoctor_id(
+                        rs.getInt("doctor_id"));
+
+                Appointments a =
+                        new Appointments(
+
+                        rs.getInt("appointment_id"),
+                        p,
+                        d,
+                        rs.getTimestamp("appointment_date"),
+                        rs.getString("reason")
+                );
+
+                list.add(a);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // View Appointment By Id
+    public Appointments viewAppointmentById(int id) {
+
+        Appointments a = null;
+
+        try {
+
+            Connection con = DBUtil.makeConnection();
+
+            String query =
+            "select * from appointments where appointment_id=?";
+
+            PreparedStatement pst =
+                    con.prepareStatement(query);
+
+            pst.setInt(1, id);
+
+            ResultSet rs =
+                    pst.executeQuery();
+
+            if (rs.next()) {
+
+                Patients p = new Patients();
+
+                p.setPatient_id(
+                        rs.getInt("patient_id"));
+
+                Doctors d = new Doctors();
+
+                d.setDoctor_id(
+                        rs.getInt("doctor_id"));
+
+                a = new Appointments(
+
+                        rs.getInt("appointment_id"),
+                        p,
+                        d,
+                        rs.getTimestamp("appointment_date"),
+                        rs.getString("reason")
+                );
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return a;
+    }
+}

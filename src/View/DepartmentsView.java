@@ -35,7 +35,7 @@ public class DepartmentsView {
     
     public String getDepartmentlocation() {
     	sc.nextLine();
-    	System.out.println(" enter the name  of department...");
+    	System.out.println(" enter the location  of department...");
     	return sc.nextLine();
     }
     
