@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Entity.Appointments;
+import Entity.DoctorAppointmentReport;
 import Entity.Doctors;
 import Entity.Patients;
 
@@ -171,6 +172,7 @@ public class AppointmentsDao {
     }
 
     // View Appointment By Id
+ 
     public Appointments viewAppointmentById(int id) {
 
         Appointments a = null;
@@ -180,15 +182,26 @@ public class AppointmentsDao {
             Connection con = DBUtil.makeConnection();
 
             String query =
-            "select * from appointments where appointment_id=?";
+
+            "SELECT a.*, "
+            + "p.first_name AS patient_first_name, "
+            + "p.last_name AS patient_last_name, "
+            + "d.first_name AS doctor_first_name, "
+            + "d.last_name AS doctor_last_name, "
+            + "d.specialization "
+            + "FROM appointments a "
+            + "JOIN patients p "
+            + "ON a.patient_id = p.patient_id "
+            + "JOIN doctors d "
+            + "ON a.doctor_id = d.doctor_id "
+            + "WHERE a.appointment_id=?";
 
             PreparedStatement pst =
                     con.prepareStatement(query);
 
             pst.setInt(1, id);
 
-            ResultSet rs =
-                    pst.executeQuery();
+            ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
 
@@ -197,10 +210,25 @@ public class AppointmentsDao {
                 p.setPatient_id(
                         rs.getInt("patient_id"));
 
+                p.setFirst_name(
+                        rs.getString("patient_first_name"));
+
+                p.setLast_name(
+                        rs.getString("patient_last_name"));
+
                 Doctors d = new Doctors();
 
                 d.setDoctor_id(
                         rs.getInt("doctor_id"));
+
+                d.setFirst_name(
+                        rs.getString("doctor_first_name"));
+
+                d.setLast_name(
+                        rs.getString("doctor_last_name"));
+
+                d.setSpecialization(
+                        rs.getString("specialization"));
 
                 a = new Appointments(
 
@@ -218,5 +246,68 @@ public class AppointmentsDao {
         }
 
         return a;
+    }
+    
+    // Doctor Appointment Report
+    public List<DoctorAppointmentReport>
+    getDoctorWiseAppointments() {
+
+        List<DoctorAppointmentReport> list =
+                new ArrayList<>();
+
+        try {
+
+            Connection con =
+                    DBUtil.makeConnection();
+
+            String query =
+
+            "SELECT d.doctor_id,"
+            + " CONCAT(d.first_name,' ',d.last_name)"
+            + " AS doctor_name,"
+            + " d.specialization,"
+            + " COUNT(a.appointment_id)"
+            + " AS total_appointments "
+            + "FROM doctors d "
+            + "LEFT JOIN appointments a "
+            + "ON d.doctor_id = a.doctor_id "
+            + "GROUP BY d.doctor_id,"
+            + " d.first_name,"
+            + " d.last_name,"
+            + " d.specialization "
+            + "ORDER BY total_appointments DESC";
+
+            PreparedStatement pst =
+                    con.prepareStatement(query);
+
+            ResultSet rs =
+                    pst.executeQuery();
+
+            while(rs.next()) {
+
+                DoctorAppointmentReport d =
+                        new DoctorAppointmentReport();
+
+                d.setDoctorId(
+                        rs.getInt("doctor_id"));
+
+                d.setDoctorName(
+                        rs.getString("doctor_name"));
+
+                d.setSpecialization(
+                        rs.getString("specialization"));
+
+                d.setTotalAppointments(
+                    rs.getInt("total_appointments"));
+
+                list.add(d);
+            }
+
+        } catch(Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return list;
     }
 }

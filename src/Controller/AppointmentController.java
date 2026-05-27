@@ -1,15 +1,21 @@
 package Controller;
+
+import java.util.List;
+
 import Entity.Appointments;
+import Entity.DoctorAppointmentReport;
 import Entity.Doctors;
 import Entity.Patients;
 import ModelDao.AppointmentsDao;
-import View.AppointmentsView;
+import View.AppointmentView;
 
 public class AppointmentController {
 
-    private AppointmentsDao dao = new AppointmentsDao();
+    private AppointmentsDao dao =
+            new AppointmentsDao();
 
-    private AppointmentsView view = new AppointmentsView();
+    private AppointmentView view =
+            new AppointmentView();
 
     public void start() {
 
@@ -24,13 +30,16 @@ public class AppointmentController {
 
                 Patients p1 = new Patients();
 
-                p1.setPatient_id(view.getPatientId());
+                p1.setPatient_id(
+                        view.getPatientId());
 
                 Doctors d1 = new Doctors();
 
-                d1.setDoctor_id(view.getDoctorId());
+                d1.setDoctor_id(
+                        view.getDoctorId());
 
-                Appointments a1 = new Appointments(
+                Appointments a1 =
+                        new Appointments(
 
                         p1,
                         d1,
@@ -39,14 +48,18 @@ public class AppointmentController {
 
                 );
 
-                int add = dao.addAppointment(a1);
+                int add =
+                        dao.addAppointment(a1);
 
                 if (add > 0) {
 
-                    System.out.println("Appointment Added Successfully...");
-                } else {
+                    System.out.println(
+                    "Appointment Added Successfully...");
+                }
+                else {
 
-                    System.out.println("Appointment Not Added...");
+                    System.out.println(
+                    "Appointment Not Added...");
                 }
 
                 break;
@@ -54,16 +67,21 @@ public class AppointmentController {
             // Delete Appointment
             case 2:
 
-                int deleteId = view.getAppointmentId();
+                int deleteId =
+                        view.getAppointmentId();
 
-                int delete = dao.deleteAppointment(deleteId);
+                int delete =
+                        dao.deleteAppointment(deleteId);
 
                 if (delete > 0) {
 
-                    System.out.println("Appointment Deleted Successfully...");
-                } else {
+                    System.out.println(
+                    "Appointment Deleted Successfully...");
+                }
+                else {
 
-                    System.out.println("Appointment Not Deleted...");
+                    System.out.println(
+                    "Appointment Not Deleted...");
                 }
 
                 break;
@@ -71,16 +89,20 @@ public class AppointmentController {
             // View Appointment By Id
             case 3:
 
-                int viewId = view.getAppointmentId();
+                int viewId =
+                        view.getAppointmentId();
 
-                Appointments a = dao.viewAppointmentById(viewId);
+                Appointments a =
+                        dao.viewAppointmentById(viewId);
 
                 if (a != null) {
 
                     System.out.println(a);
-                } else {
+                }
+                else {
 
-                    System.out.println("Appointment Not Found...");
+                    System.out.println(
+                    "Appointment Not Found...");
                 }
 
                 break;
@@ -90,13 +112,16 @@ public class AppointmentController {
 
                 Patients p2 = new Patients();
 
-                p2.setPatient_id(view.getPatientId());
+                p2.setPatient_id(
+                        view.getPatientId());
 
                 Doctors d2 = new Doctors();
 
-                d2.setDoctor_id(view.getDoctorId());
+                d2.setDoctor_id(
+                        view.getDoctorId());
 
-                Appointments a2 = new Appointments(
+                Appointments a2 =
+                        new Appointments(
 
                         p2,
                         d2,
@@ -105,29 +130,59 @@ public class AppointmentController {
 
                 );
 
-                a2.setAppointment_id(view.getAppointmentId());
+                a2.setAppointment_id(
+                        view.getAppointmentId());
 
-                int update = dao.updateAppointment(a2);
+                int update =
+                        dao.updateAppointment(a2);
 
                 if (update > 0) {
 
-                    System.out.println("Appointment Updated Successfully...");
-                } else {
+                    System.out.println(
+                    "Appointment Updated Successfully...");
+                }
+                else {
 
-                    System.out.println("Appointment Not Updated...");
+                    System.out.println(
+                    "Appointment Not Updated...");
+                }
+
+                break;
+
+            // Doctor Appointment Report
+            case 5:
+
+                List<DoctorAppointmentReport> report =
+                        dao.getDoctorWiseAppointments();
+
+                if(report.isEmpty()) {
+
+                    System.out.println(
+                    "No Data Found...");
+                }
+                else {
+
+                    for(DoctorAppointmentReport r
+                            : report) {
+
+                        System.out.println(r);
+                    }
                 }
 
                 break;
 
             // Exit
-            case 5:
+            case 6:
 
-                System.out.println("Application Closed...");
+                System.out.println(
+                "Application Closed...");
+
                 return;
 
             default:
 
-                System.out.println("Invalid Choice...");
+                System.out.println(
+                "Invalid Choice...");
             }
         }
     }

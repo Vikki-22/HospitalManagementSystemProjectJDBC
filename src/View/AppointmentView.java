@@ -3,7 +3,7 @@ package View;
 import java.sql.Timestamp;
 import java.util.Scanner;
 
-public class AppointmentsView {
+public class AppointmentView {
 
     private Scanner sc = new Scanner(System.in);
 
@@ -16,7 +16,8 @@ public class AppointmentsView {
         System.out.println("Enter 2 : Delete Appointment");
         System.out.println("Enter 3 : View Appointment");
         System.out.println("Enter 4 : Update Appointment");
-        System.out.println("Enter 5 : Exit");
+        System.out.println("Enter 5 : Doctor Appointment Report");
+        System.out.println("Enter 6 : Exit");
 
         System.out.print("Enter Your Choice : ");
 
@@ -49,7 +50,8 @@ public class AppointmentsView {
 
         sc.nextLine();
 
-        System.out.print("Enter Appointment Time (yyyy-mm-dd hh:mm:ss) : ");
+        System.out.print(
+        "Enter Appointment Time (yyyy-mm-dd hh:mm:ss) : ");
 
         return Timestamp.valueOf(sc.nextLine());
     }
