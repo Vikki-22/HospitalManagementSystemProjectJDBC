@@ -13,13 +13,9 @@ public class BillsDao {
 
     // Add Bill
     public int addBill(Bills b) {
-
         int i = 0;
-
         try {
-
             Connection con = DBUtil.makeConnection();
-
             String query =
             "insert into bills(patient_id,appointment_id,total_amount,payment_status,bill_date) values(?,?,?,?,?)";
 

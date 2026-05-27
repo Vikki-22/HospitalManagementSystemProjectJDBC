@@ -12,7 +12,6 @@ public class Doctors {
     private String email;
     private Date hire_date;
     private Departments departments_id;
-
     public Doctors(int doctor_id, String first_name, String last_name,
             String specialization, String phone, String email,
             Date hire_date, Departments departments_id) {
